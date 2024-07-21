@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sundial/screens/home_screen.dart';
 import 'package:sundial/screens/loading_screen.dart';
 
 void main() {
@@ -16,13 +15,10 @@ class MyApp extends StatelessWidget {
       title: 'Sundial',
       theme: ThemeData(
         colorScheme:
-            ColorScheme.fromSeed(seedColor: Color.fromARGB(6, 20, 27, 1)),
+            ColorScheme.fromSeed(seedColor: const Color.fromARGB(6, 12, 1, 27)),
         useMaterial3: true,
       ),
       home: const LoadingScreen(),
-      routes: {
-        '/home': (context) => const HomeScreen(),
-      },
     );
   }
 }

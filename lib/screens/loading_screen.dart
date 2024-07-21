@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sundial/screens/home_screen.dart';
+import 'package:sundial/screens/onboarding/onboarding.dart';
 
 class LoadingScreen extends StatefulWidget {
   const LoadingScreen({super.key});
@@ -10,16 +13,45 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
+  bool isFirstRun = true;
+
   @override
   void initState() {
     super.initState();
-    _navigateToNextScreen();
+    Future.delayed(const Duration(seconds: 5), () {
+      _checkFirstRun().then((value) {
+        setState(() {
+          isFirstRun = value;
+        });
+      });
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _navigateToNextScreen();
+      });
+    });
   }
 
-  _navigateToNextScreen() async {
-    await Future.delayed(const Duration(minutes: 5));
-    if (mounted) {
-      Navigator.of(context).pushReplacementNamed('/home');
+  Future<bool> _checkFirstRun() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('isFirstRun') ?? true;
+  }
+
+  // _navigateToNextScreen() async {
+  //   await Future.delayed(const Duration(seconds: 6));
+  //   if (mounted) {
+  //     Navigator.of(context).pushReplacementNamed('/home');
+  //   }
+  // }
+
+  void _navigateToNextScreen() {
+    if (isFirstRun) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const OnBoardingScreen()),
+      );
+    } else {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+      );
     }
   }
 
@@ -30,7 +62,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       title: title,
       theme: ThemeData(textTheme: GoogleFonts.poppinsTextTheme()),
       home: Scaffold(
-        backgroundColor: Color(0xFF06141B),
+        backgroundColor: const Color(0xFF06141B),
         body: SafeArea(
             child: Container(
           decoration: const BoxDecoration(
@@ -75,8 +107,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
                 ),
                 const Spacer(),
                 Center(
-                  child: LoadingAnimationWidget.discreteCircle(
-                      color: Color(0XFFF45050), size: 42),
+                  child: LoadingAnimationWidget.inkDrop(
+                      color: const Color(0XFFF45050), size: 42),
                 ),
                 const Spacer(),
               ],
