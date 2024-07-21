@@ -211,7 +211,7 @@ final List<Onboard> data = [
   Onboard(
     title: "Don’t forget\nhydration is key.",
     description:
-        "Water is also a vital part of any exercise because it cleans toxins in the body.",
+        "Water is also a vital part of any exercise as it cleans toxins in the body.",
     backgroundImage: "assets/images/OnboardingBg3.png",
   ),
 ];
@@ -239,7 +239,10 @@ class OnBoardContent extends StatelessWidget {
         Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.black.withOpacity(0.7), Colors.transparent],
+              colors: [
+                const Color(0xFF06141B).withOpacity(0.7),
+                Colors.transparent
+              ],
               begin: Alignment.bottomCenter,
               end: Alignment.topCenter,
             ),
