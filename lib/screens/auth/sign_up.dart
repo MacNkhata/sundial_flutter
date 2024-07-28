@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sundial/screens/auth/sign_up.dart';
+import 'package:sundial/screens/auth/login.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -9,21 +9,23 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: LoginScreen(),
+      home: SignUpScreen(),
     );
   }
 }
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
+  final FocusNode _focusName = FocusNode();
   final FocusNode _focusEmail = FocusNode();
   final FocusNode _focusPass = FocusNode();
+  final FocusNode _focusPass2 = FocusNode();
 
   @override
   void dispose() {
@@ -78,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: 16.0,
                       ),
                       Text(
-                        "Let's get it",
+                        "Let's get you started",
                         textAlign: TextAlign.center,
                         style: GoogleFonts.poppins(
                           textStyle: const TextStyle(
@@ -88,11 +90,51 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 60.0),
+                      const SizedBox(height: 32.0),
                       Padding(
                         padding: const EdgeInsets.all(16),
                         child: Column(
                           children: [
+                            TextField(
+                              focusNode: _focusName,
+                              decoration: InputDecoration(
+                                border: const OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(12.0)),
+                                ),
+                                enabledBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color(0XFFF0F0F0),
+                                    width: 1.0,
+                                  ),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(12.0)),
+                                ),
+                                focusedBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color(0XFFF45050),
+                                    width: 2.0,
+                                  ),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(12.0)),
+                                ),
+                                labelText: 'Username',
+                                labelStyle: GoogleFonts.poppins(
+                                  textStyle:
+                                      const TextStyle(color: Color(0XFFF0F0F0)),
+                                ),
+                                hintText:
+                                    'Enter valid mail id as abc@gmail.com',
+                              ),
+                              style: GoogleFonts.poppins(
+                                textStyle: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18.0,
+                                ),
+                              ),
+                              cursorColor: const Color(0XFFF45050),
+                            ),
+                            const SizedBox(height: 16.0),
                             TextField(
                               focusNode: _focusEmail,
                               decoration: InputDecoration(
@@ -116,7 +158,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(12.0)),
                                 ),
-                                labelText: 'Username or email',
+                                labelText: 'Email',
                                 labelStyle: GoogleFonts.poppins(
                                   textStyle:
                                       const TextStyle(color: Color(0XFFF0F0F0)),
@@ -132,7 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               cursorColor: const Color(0XFFF45050),
                             ),
-                            const SizedBox(height: 24.0),
+                            const SizedBox(height: 16.0),
                             TextField(
                               focusNode: _focusPass,
                               obscureText: true,
@@ -171,6 +213,45 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               cursorColor: const Color(0XFFF45050),
                             ),
+                            const SizedBox(height: 16.0),
+                            TextField(
+                              focusNode: _focusPass2,
+                              obscureText: true,
+                              decoration: InputDecoration(
+                                border: const OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(12.0)),
+                                ),
+                                enabledBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color(0XFFF0F0F0),
+                                    width: 1.0,
+                                  ),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(12.0)),
+                                ),
+                                focusedBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color(0XFFF45050),
+                                    width: 2.0,
+                                  ),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(12.0)),
+                                ),
+                                labelText: 'Confirm Password',
+                                labelStyle: GoogleFonts.poppins(
+                                  textStyle:
+                                      const TextStyle(color: Color(0XFFF0F0F0)),
+                                ),
+                              ),
+                              style: GoogleFonts.poppins(
+                                textStyle: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                ),
+                              ),
+                              cursorColor: const Color(0XFFF45050),
+                            ),
                             const SizedBox(height: 40.0),
                             SizedBox(
                               width: double.infinity,
@@ -187,7 +268,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 icon: const Icon(Icons.login,
                                     color: Colors.white),
                                 label: Text(
-                                  "Login",
+                                  "Sign Up",
                                   style: GoogleFonts.poppins(
                                     textStyle: const TextStyle(
                                       color: Colors.white,
@@ -197,7 +278,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 40.0),
+                            const SizedBox(height: 32.0),
                             Row(
                               children: [
                                 const Expanded(
@@ -215,7 +296,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     child: Divider(color: Color(0xFFF45050))),
                               ],
                             ),
-                            const SizedBox(height: 40.0),
+                            const SizedBox(height: 32.0),
                             SizedBox(
                               width: double.infinity,
                               child: OutlinedButton.icon(
@@ -245,24 +326,24 @@ class _LoginScreenState extends State<LoginScreen> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          const SignUpScreen()),
+                                          const LoginScreen()),
                                 );
                               },
                               child: RichText(
                                 text: TextSpan(
-                                  text: 'Not yet registered? ',
+                                  text: 'Already registered? ',
                                   style: GoogleFonts.poppins(
                                     textStyle:
                                         const TextStyle(color: Colors.white),
                                   ),
                                   children: [
                                     TextSpan(
-                                      text: 'Sign Up',
+                                      text: 'Login',
                                       style: GoogleFonts.poppins(
                                         textStyle: const TextStyle(
                                           color: Color(0xFFF45050),
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 16.0,
+                                          fontSize: 18.0,
                                         ),
                                       ),
                                     ),
