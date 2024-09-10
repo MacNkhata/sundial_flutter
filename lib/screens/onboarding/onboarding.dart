@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sundial/screens/auth/login.dart';
+import 'package:sundial/services/util.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({super.key});
@@ -78,7 +79,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                         const SizedBox.shrink()
                       else
                         TextButton(
-                          onPressed: () {
+                          onPressed: () async {
+                            await completeOnboarding();
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
@@ -97,7 +99,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       const Spacer(),
                       if (_pageIndex == data.length - 1)
                         ElevatedButton.icon(
-                          onPressed: () {
+                          onPressed: () async {
+                            await completeOnboarding();
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(

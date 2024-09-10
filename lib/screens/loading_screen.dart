@@ -18,39 +18,23 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 5), () {
-      _checkFirstRun().then((value) {
-        setState(() {
-          isFirstRun = value;
-        });
-      });
-
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _navigateToNextScreen();
-      });
-    });
+    _navigateToNextScreen();
   }
 
-  Future<bool> _checkFirstRun() async {
+  Future<void> _navigateToNextScreen() async {
+    await Future.delayed(const Duration(seconds: 3));
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getBool('isFirstRun') ?? true;
-  }
+    bool isFirstRun = prefs.getBool('onboarding_completed') ?? false;
 
-  // _navigateToNextScreen() async {
-  //   await Future.delayed(const Duration(seconds: 6));
-  //   if (mounted) {
-  //     Navigator.of(context).pushReplacementNamed('/home');
-  //   }
-  // }
-
-  void _navigateToNextScreen() {
     if (isFirstRun) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const OnBoardingScreen()),
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
       );
     } else {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const OnBoardingScreen()),
       );
     }
   }
