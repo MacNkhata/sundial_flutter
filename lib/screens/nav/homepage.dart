@@ -1,7 +1,11 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -12,10 +16,35 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   String greetingMessage = '';
+  List<dynamic> _data = [];
+
   @override
   void initState() {
     super.initState();
     greetingMessage = getGreeting();
+    fetchUserDetails();
+  }
+
+  Future<void> fetchUserDetails() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+
+    try {
+      final response = await http.get(
+        Uri.parse('http://192.168.117.168:8000/api/v1/workouts'),
+        headers: {
+          HttpHeaders.authorizationHeader: pref.getString('jwt') ?? '',
+        },
+      );
+      if (response.statusCode == 200) {
+        setState(() {
+          _data = json.decode(response.body);
+        });
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   String getGreeting() {
@@ -254,62 +283,70 @@ class _HomepageState extends State<Homepage> {
                 height: 32.0,
               ),
               Expanded(
-                child: ListView(
+                child: ListView.builder(
+                  itemCount: _data.length,
                   scrollDirection: Axis.vertical,
-                  children: <Widget>[
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          width: 2,
-                          color: const Color(0XFFF45050),
+                  itemBuilder: (context, index) {
+                    var item = _data[index];
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 16.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            width: 2,
+                            color: const Color(0XFFF45050),
+                          ),
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(12),
+                          ),
                         ),
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(12),
-                        ),
-                      ),
-                      height: 80.0,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const HugeIcon(
-                              icon: HugeIcons.strokeRoundedFire,
-                              color: Color(0xFFF45050),
-                              size: 32.0,
-                            ),
-                            Text(
-                              "Workout Name",
-                              style: GoogleFonts.poppins(
-                                textStyle: const TextStyle(
-                                  fontSize: 18.0,
-                                  color: Color(0xFFF0F0F0),
+                        height: 80.0,
+                        child: Padding(
+                          padding:
+                              const EdgeInsets.only(left: 16.0, right: 16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const HugeIcon(
+                                icon: HugeIcons.strokeRoundedFire,
+                                color: Color(0xFFF45050),
+                                size: 32.0,
+                              ),
+                              Text(
+                                item['name'],
+                                style: GoogleFonts.poppins(
+                                  textStyle: const TextStyle(
+                                    fontSize: 18.0,
+                                    color: Color(0xFFF0F0F0),
+                                  ),
                                 ),
                               ),
-                            ),
-                            Text(
-                              "60:00",
-                              style: GoogleFonts.poppins(
-                                textStyle: const TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFFF0F0F0),
+                              Text(
+                                item['duration'].toString(),
+                                style: GoogleFonts.poppins(
+                                  textStyle: const TextStyle(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFFF0F0F0),
+                                  ),
                                 ),
                               ),
-                            ),
-                            const IconButton(
+                              const IconButton(
                                 onPressed: null,
                                 icon: HugeIcon(
-                                    icon: HugeIcons
-                                        .strokeRoundedMoreVerticalSquare01,
-                                    color: Color(0xFFF45050)))
-                          ],
+                                  icon: HugeIcons
+                                      .strokeRoundedMoreVerticalSquare01,
+                                  color: Color(0xFFF45050),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    );
+                  },
                 ),
-              )
+              ),
             ],
           ),
         ),
