@@ -1,10 +1,11 @@
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
-  final String _baseUrl = 'http://192.168.117.168:8000/api/v1';
+  final String _baseUrl = dotenv.env['API_URL'] ?? "";
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
   Future<bool> login(String email, String password) async {

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:sundial/screens/loading_screen.dart';
 
-void main() {
+Future<void> main() async {
+  // Loading .env file
+  await dotenv.load(fileName: ".env");
+
   runApp(const MyApp());
 }
 

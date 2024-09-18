@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:http/http.dart' as http;
@@ -17,6 +18,7 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   String greetingMessage = '';
   List<dynamic> _data = [];
+  String apiUrl = dotenv.env['API_URL'] ?? "";
 
   @override
   void initState() {
@@ -30,7 +32,7 @@ class _HomepageState extends State<Homepage> {
 
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.117.168:8000/api/v1/workouts'),
+        Uri.parse('$apiUrl/workouts'),
         headers: {
           HttpHeaders.authorizationHeader: pref.getString('jwt') ?? '',
         },
