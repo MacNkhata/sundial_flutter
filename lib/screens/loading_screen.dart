@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sundial/screens/auth/login.dart';
 import 'package:sundial/screens/home/home.dart';
 import 'package:sundial/screens/onboarding/onboarding.dart';
+import 'package:sundial/services/util.dart';
 
 class LoadingScreen extends StatefulWidget {
   const LoadingScreen({super.key});
@@ -34,18 +35,26 @@ class _LoadingScreenState extends State<LoadingScreen> {
         MaterialPageRoute(builder: (context) => const OnBoardingScreen()),
       );
     } else {
-      String? jwt = prefs.getString('jwt');
+      try {
+        var user = await fetchUserDetails();
+        var workouts = await fetchWorkoutDetails();
+        String? jwt = prefs.getString('jwt');
 
-      if (jwt != null && !JwtDecoder.isExpired(jwt)) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
-        );
-      } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginScreen()),
-        );
+        if (jwt != null && !JwtDecoder.isExpired(jwt)) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    HomeScreen(user: user, workouts: workouts)),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const LoginScreen()),
+          );
+        }
+      } catch (e) {
+        print(e);
       }
     }
   }

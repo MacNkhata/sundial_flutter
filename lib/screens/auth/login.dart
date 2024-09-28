@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:sundial/screens/auth/sign_up.dart';
 import 'package:sundial/screens/home/home.dart';
 import 'package:sundial/services/login_provider.dart';
+import 'package:sundial/services/util.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -217,12 +218,19 @@ class _LoginScreenState extends State<LoginScreen> {
                                               _emailController.text,
                                               _passwordController.text,
                                             );
+
+                                            var user = await fetchUserDetails();
+                                            var workouts =
+                                                await fetchWorkoutDetails();
                                             if (success) {
                                               Navigator.pushReplacement(
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        const HomeScreen()),
+                                                        HomeScreen(
+                                                          user: user,
+                                                          workouts: workouts,
+                                                        )),
                                               );
                                             } else {
                                               ScaffoldMessenger.of(context)

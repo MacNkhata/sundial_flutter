@@ -3,7 +3,7 @@ class User {
   final String username;
   final String password;
 
-  const User({
+  User({
     required this.email,
     required this.username,
     required this.password,

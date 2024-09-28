@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:sundial/models/user.dart';
 import 'package:sundial/screens/nav/dashboard.dart';
 import 'package:sundial/screens/nav/profile.dart';
 
 import '../nav/homepage.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final User? user;
+  final List<dynamic>? workouts;
+  const HomeScreen({super.key, this.user, this.workouts});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -14,12 +17,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int currentPageIndex = 0;
-
-  static const List<Widget> _pages = <Widget>[
-    Homepage(),
-    DashboardScreen(),
-    ProfileScreen()
-  ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -29,6 +26,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var user = widget.user;
+    var workouts = widget.workouts;
+
+    List<Widget> pages = <Widget>[
+      Homepage(user: user, workouts: workouts),
+      const DashboardScreen(),
+      const ProfileScreen()
+    ];
+
     return Scaffold(
       backgroundColor: const Color(0xFF06141B),
       bottomNavigationBar: BottomNavigationBar(
@@ -63,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
               label: 'Profile'),
         ],
       ),
-      body: _pages[currentPageIndex],
+      body: pages[currentPageIndex],
     );
   }
 }

@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hugeicons/hugeicons.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:sundial/models/user.dart';
 
 class Homepage extends StatefulWidget {
-  const Homepage({super.key});
+  final User? user;
+  final List<dynamic>? workouts;
+  const Homepage({super.key, this.user, this.workouts});
 
   @override
   State<Homepage> createState() => _HomepageState();
@@ -17,36 +19,11 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   String greetingMessage = '';
-  List<dynamic> _data = [];
-  String apiUrl = dotenv.env['API_URL'] ?? "";
 
   @override
   void initState() {
     super.initState();
     greetingMessage = getGreeting();
-    fetchUserDetails();
-  }
-
-  Future<void> fetchUserDetails() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-
-    try {
-      final response = await http.get(
-        Uri.parse('$apiUrl/workouts'),
-        headers: {
-          HttpHeaders.authorizationHeader: pref.getString('jwt') ?? '',
-        },
-      );
-      if (response.statusCode == 200) {
-        setState(() {
-          _data = json.decode(response.body);
-        });
-      } else {
-        throw Exception('Failed to load data');
-      }
-    } catch (e) {
-      print(e);
-    }
   }
 
   String getGreeting() {
@@ -63,6 +40,9 @@ class _HomepageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
+    var user = widget.user;
+    var workouts = widget.workouts;
+
     return Scaffold(
       backgroundColor: const Color(0xFF06141B),
       body: SafeArea(
@@ -85,7 +65,7 @@ class _HomepageState extends State<Homepage> {
                         ),
                       ),
                       Text(
-                        "Username",
+                        user!.username,
                         style: GoogleFonts.poppins(
                           textStyle: const TextStyle(
                               fontSize: 24.0, color: Color(0XFFF45050)),
@@ -286,10 +266,10 @@ class _HomepageState extends State<Homepage> {
               ),
               Expanded(
                 child: ListView.builder(
-                  itemCount: _data.length,
+                  itemCount: workouts?.length,
                   scrollDirection: Axis.vertical,
                   itemBuilder: (context, index) {
-                    var item = _data[index];
+                    var item = workouts?[index];
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 16.0),
                       child: Container(
