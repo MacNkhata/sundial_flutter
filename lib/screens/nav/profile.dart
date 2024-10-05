@@ -29,7 +29,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             await prefs.remove('jwt');
             await prefs.remove('userId');
 
-            await Future.delayed(Duration(seconds: 3));
+            await Future.delayed(const Duration(seconds: 2));
 
             Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(

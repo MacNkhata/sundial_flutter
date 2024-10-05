@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hugeicons/hugeicons.dart';
 
 import 'package:sundial/models/user.dart';
+import 'package:sundial/screens/nav/workout/workout.dart';
 
 class Homepage extends StatefulWidget {
   final User? user;
@@ -84,7 +85,14 @@ class _HomepageState extends State<Homepage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               TextButton.icon(
-                                onPressed: null,
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            Workout(workoutId: item['_id'])),
+                                  );
+                                },
                                 iconAlignment: IconAlignment.start,
                                 icon: const HugeIcon(
                                   icon: HugeIcons.strokeRoundedFire,

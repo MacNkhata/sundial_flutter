@@ -6,12 +6,11 @@ import 'dart:convert';
 import 'dart:io';
 
 User? user;
-List<dynamic>? workouts = [];
 String apiUrl = dotenv.env['API_URL'] ?? "";
 
 Future<void> completeOnboarding() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.setBool('onboarding_completed', true);
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  await pref.setBool('onboarding_completed', true);
 }
 
 Future<User?> fetchUserDetails() async {
@@ -38,6 +37,7 @@ Future<User?> fetchUserDetails() async {
 
 Future<List<dynamic>?> fetchWorkoutDetails() async {
   SharedPreferences pref = await SharedPreferences.getInstance();
+  List<dynamic>? workouts = [];
 
   final response = await http.get(
     Uri.parse('$apiUrl/workouts'),
@@ -48,6 +48,25 @@ Future<List<dynamic>?> fetchWorkoutDetails() async {
   if (response.statusCode == 200) {
     workouts = json.decode(response.body);
     return workouts;
+  } else {
+    throw Exception('Failed to load data');
+  }
+}
+
+Future<List<dynamic>?> fetchWorkoutExercise(workoutId) async {
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  List<dynamic>? exercises = [];
+  final response = await http.get(
+    Uri.parse('$apiUrl/workouts/$workoutId/exercises'),
+    headers: {
+      HttpHeaders.authorizationHeader: pref.getString('jwt') ?? '',
+    },
+  );
+
+  if (response.statusCode == 200) {
+    exercises = json.decode(response.body)['exercises'];
+    print(exercises);
+    return exercises;
   } else {
     throw Exception('Failed to load data');
   }
