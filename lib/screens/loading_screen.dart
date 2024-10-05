@@ -37,7 +37,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     } else {
       try {
         var user = await fetchUserDetails();
-        var workouts = await fetchWorkoutDetails();
+        var workouts = await fetchWorkoutsDetails();
         String? jwt = prefs.getString('jwt');
 
         if (jwt != null && !JwtDecoder.isExpired(jwt)) {

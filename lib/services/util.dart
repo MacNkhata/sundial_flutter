@@ -35,7 +35,7 @@ Future<User?> fetchUserDetails() async {
   return null;
 }
 
-Future<List<dynamic>?> fetchWorkoutDetails() async {
+Future<List<dynamic>?> fetchWorkoutsDetails() async {
   SharedPreferences pref = await SharedPreferences.getInstance();
   List<dynamic>? workouts = [];
 
@@ -48,6 +48,25 @@ Future<List<dynamic>?> fetchWorkoutDetails() async {
   if (response.statusCode == 200) {
     workouts = json.decode(response.body);
     return workouts;
+  } else {
+    throw Exception('Failed to load data');
+  }
+}
+
+Future<Map<String, dynamic>?> fetchWorkout(workoutId) async {
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  Map<String, dynamic>? workout;
+
+  final response = await http.get(
+    Uri.parse('$apiUrl/workouts/$workoutId'),
+    headers: {
+      HttpHeaders.authorizationHeader: pref.getString('jwt') ?? '',
+    },
+  );
+
+  if (response.statusCode == 200) {
+    workout = json.decode(response.body);
+    return workout;
   } else {
     throw Exception('Failed to load data');
   }

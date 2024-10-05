@@ -14,11 +14,14 @@ class Workout extends StatefulWidget {
 
 class _WorkoutState extends State<Workout> {
   List<dynamic>? exercises = [];
+  Map<String, dynamic>? workout;
+
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
+    _getWorkout(widget.workoutId);
     _getExercises(widget.workoutId);
   }
 
@@ -26,6 +29,14 @@ class _WorkoutState extends State<Workout> {
     var exercisesList = await fetchWorkoutExercise(workoutId);
     setState(() {
       exercises = exercisesList;
+      _isLoading = false;
+    });
+  }
+
+  Future<void> _getWorkout(String workoutId) async {
+    var workoutObject = await fetchWorkout(workoutId);
+    setState(() {
+      workout = workoutObject;
       _isLoading = false;
     });
   }
@@ -76,7 +87,9 @@ class _WorkoutState extends State<Workout> {
         padding: const EdgeInsets.fromLTRB(16.0, 24.0, 16.0, 0.0),
         child: Column(
           children: [
-            const _WorkoutHeader(),
+            _WorkoutHeader(
+              workout: workout,
+            ),
             const Divider(
               color: Color(0xFFF45050),
             ),
@@ -175,9 +188,9 @@ class _WorkoutState extends State<Workout> {
 }
 
 class _WorkoutHeader extends StatelessWidget {
-  const _WorkoutHeader({
-    super.key,
-  });
+  final Map<String, dynamic>? workout;
+
+  const _WorkoutHeader({super.key, required this.workout});
 
   @override
   Widget build(BuildContext context) {
@@ -185,7 +198,7 @@ class _WorkoutHeader extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          "Workout Title",
+          workout!['name'],
           style: GoogleFonts.poppins(
             textStyle: const TextStyle(
               fontSize: 20.0,
@@ -197,7 +210,7 @@ class _WorkoutHeader extends StatelessWidget {
         Row(
           children: [
             Text(
-              "30mins",
+              "${workout!['duration'] / 60}mins",
               style: GoogleFonts.poppins(
                 textStyle: const TextStyle(
                   fontSize: 20.0,

@@ -221,7 +221,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                             var user = await fetchUserDetails();
                                             var workouts =
-                                                await fetchWorkoutDetails();
+                                                await fetchWorkoutsDetails();
                                             if (success) {
                                               Navigator.pushReplacement(
                                                 context,
